@@ -1,0 +1,7 @@
+matplotlib
+numpy
+jupyter
+scikit-learn
+scipy
+tqdm
+wfdb

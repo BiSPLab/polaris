@@ -1,0 +1,5 @@
+datasets/
+venv/
+.vscode/
+__pycache*
+*.pyc
