@@ -1,5 +1,9 @@
+# %%
 import numpy as np
 import networkx as nx
+from sklearn.linear_model import LogisticRegression
+
+# %%
 
 def plot_causal_graph_fever2():
     # Create a directed graph
@@ -29,3 +33,22 @@ def create_fever2_dataset(N=100):
     #np.savetxt('datasets/fever2.csv', X, delimiter=',')
 
     return np.concatenate([T, H, F], axis=1)
+
+def logistic_regression_f():
+    model = LogisticRegression(penalty=None, fit_intercept=True)
+
+    return model
+
+def calcola_accuratezza(Y: np.ndarray, Yp: np.ndarray) -> float:
+    # Ensure both arrays are numpy arrays.
+    Y = np.asarray(Y)
+    Yp = np.asarray(Yp)
+    
+    # Convert both to boolean if they are floats.
+    if np.issubdtype(Y.dtype, np.floating):
+        Y = Y >= 0.5
+    if np.issubdtype(Yp.dtype, np.floating):
+        Yp = Yp >= 0.5
+    
+    # Now both are boolean arrays, safe to compare.
+    return np.mean(Y == Yp)

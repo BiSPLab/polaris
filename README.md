@@ -4,6 +4,8 @@
 
 ### Python Environment
 
+Il progetto è stato sviluppato e testato con Python 3.13.9.
+
 In Windows:
 1. Aprire il terminale nella cartella di progetto e creare il python environment con `python -m venv venv`
 2. Attivare l'environment con `.\venv\Scripts\activate`
