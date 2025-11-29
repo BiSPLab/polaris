@@ -1,4 +1,4 @@
-# Polaris
+# Progetto DIGA: Polaris
 
 ## Installazione
 

@@ -2,3 +2,4 @@ venv/
 .vscode/
 __pycache*
 *.pyc
+datasets/ptb-diagnostic-ecg-database-1.0.0/
