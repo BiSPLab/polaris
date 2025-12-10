@@ -3,6 +3,9 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+from tabulate import tabulate
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
 
 # %%
 
@@ -90,3 +93,80 @@ def disegna_decision_boundary(X, model:LogisticRegression, fun=lambda x1, x2: [x
     YY = np.reshape(y, shape=xx1.shape, order='F')
 
     plt.contour(X1, X2, YY, [0.0], origin='lower')
+
+def disegna_torta(lista, etichette):
+    _, ax = plt.subplots()
+    ax.pie(lista, labels=etichette, autopct='%1.1f%%')
+
+def calcola_tabella_infarto_sesso(D, S):
+    cm = np.zeros((2, 2))
+    cm[0, 0] = np.sum((D==1) & (S==0))
+    cm[1, 0] = np.sum((D==1) & (S==1))
+    cm[0, 1] = np.sum((D==0) & (S==0))
+    cm[1, 1] = np.sum((D==0) & (S==1))
+    return cm
+
+def stampa_tabella_infarto_sesso(D, S):
+    cm = calcola_tabella_infarto_sesso(D, S)
+
+    data = [
+        ["F", cm[0, 0], cm[0, 1]],
+        ["M", cm[1, 0], cm[1, 1]]
+    ]
+
+    print(tabulate(data, headers=["M/F", "Infarto", "Sano"], tablefmt="grid"))
+
+def disegna_ecg(E, D, index, fs=1000.0):
+    t = np.arange(0, E.shape[1], 1)/fs
+    plt.plot(t, E[index, :])
+    plt.title(f'Diagnosi: {'Infarto' if D[index] == 1 else 'Sano'}')
+    plt.xlabel('Tempo (s)')
+    plt.ylabel('Ampiezza (mV)')
+
+def disegna_due_ecg(E, D, index1, index2, fs=1000.0):
+    t = np.arange(0, E.shape[1], 1)/fs
+    
+    _, ax = plt.subplots(1, 2)
+
+    ax[0].plot(t, E[index1, :])
+    ax[0].set_title(f'Diagnosi: {'Infarto' if D[index1] == 1 else 'Sano'}')
+    ax[0].set_xlabel('Tempo (s)')
+    ax[0].set_ylabel('Ampiezza (mV)')
+
+    ax[1].plot(t, E[index2, :])
+    ax[1].set_title(f'Diagnosi: {'Infarto' if D[index2] == 1 else 'Sano'}')
+    ax[1].set_xlabel('Tempo (s)')
+    ax[1].set_ylabel('Ampiezza (mV)')
+
+def ann_f(n_hidden=5, n_classes=2):
+    model = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(n_hidden, n_classes), random_state=1)
+    
+    return model
+
+def ann_addestra(X, Y, model:MLPClassifier):
+    Xp = adjust_arrays(X)
+    model.fit(Xp, Y)
+
+def ann_predici(X, model:MLPClassifier):
+    Xp = adjust_arrays(X)
+    Yp = model.predict(Xp)
+    return Yp
+
+def dividi_dataset(X, Y, test_size=0.3):
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=test_size)
+    return X_train, X_test, y_train, y_test
+
+def stampa_matrice_confusione_infarto(D, Yp):
+    cm = np.zeros((2, 2))
+    cm[0, 0] = np.sum((D==1) & (Yp==1))
+    cm[1, 0] = np.sum((D==1) & (Yp==0))
+    cm[0, 1] = np.sum((D==0) & (Yp==1))
+    cm[1, 1] = np.sum((D==0) & (Yp==0))
+
+    data = [
+        ["ANN+", cm[0, 0], cm[0, 1]],
+        ["ANN-", cm[1, 0], cm[1, 1]]
+    ]
+
+    print(tabulate(data, headers=["", "Infarto", "Sano"], tablefmt="grid"))

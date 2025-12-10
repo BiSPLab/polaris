@@ -4,5 +4,6 @@ numpy
 jupyter
 scikit-learn
 scipy
+tabulate
 tqdm
 wfdb
