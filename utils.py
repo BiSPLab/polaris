@@ -128,15 +128,20 @@ def disegna_due_ecg(E, D, index1, index2, fs=1000.0):
     
     _, ax = plt.subplots(1, 2)
 
+    m = 1.1*np.min(np.array([np.min(E[index1, :]), np.min(E[index2, :])]))
+    M = 1.1*np.max(np.array([np.max(E[index1, :]), np.max(E[index2, :])]))
+
     ax[0].plot(t, E[index1, :])
     ax[0].set_title(f'Diagnosi: {'Infarto' if D[index1] == 1 else 'Sano'}')
     ax[0].set_xlabel('Tempo (s)')
     ax[0].set_ylabel('Ampiezza (mV)')
+    ax[0].set_ylim([m, M])
 
     ax[1].plot(t, E[index2, :])
     ax[1].set_title(f'Diagnosi: {'Infarto' if D[index2] == 1 else 'Sano'}')
     ax[1].set_xlabel('Tempo (s)')
     ax[1].set_ylabel('Ampiezza (mV)')
+    ax[1].set_ylim([m, M])
 
 def ann_f(n_hidden=5, n_classes=2):
     model = MLPClassifier(solver='lbfgs', alpha=1e-5,
